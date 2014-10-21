@@ -15,15 +15,58 @@
     CLLocationCoordinate2D animationStartCoordinate;
     CLLocationCoordinate2D animationFinishCoordinate;
     int animationsProgress;
+    
+    float totalLatitude;
+    float totalLongitude;
 }
 
--(id)initWithMarkerObjectsArray:(NSArray *)markerObjects parentController:(uTikoMKClusterController *)parentController
+-(instancetype)init
 {
     self = [super init];
-    self.annotationObjects = [NSMutableSet setWithArray:markerObjects];
-    self.parentController = parentController;
-    [self calculateValues];
+    self.clusterRect = MKMapRectMake(-180, -180, 360, 360);
+    self.annotationCount = 0;
+    self.parentCluster = nil;
+    self.childClusters = [NSMutableDictionary dictionary];
     return self;
+}
+
+-(instancetype)initWithClusterRect:(MKMapRect)clusterRect parentCluster:(uTikoMKClusterAnnotation *)parentCluster
+{
+    self = [super init];
+    self.clusterRect = clusterRect;
+    self.parentCluster = parentCluster;
+    self.childClusters = [NSMutableDictionary dictionary];
+    return self;
+}
+
+- (void)addAnnotationObject:(uTikoMKAnnotationObject *)annotationObject
+{
+    if (!self.annotationObjects) self.annotationObjects = [NSMutableSet set];
+    [self.annotationObjects addObject:annotationObject];
+    
+    if (!self.isLowest) {
+        NSString * subClusterColl = (annotationObject.coordinate.longitude<self.clusterRect.origin.x + self.clusterRect.size.width / 2)?@"left":@"right";
+        NSString * subClusterRow = (annotationObject.coordinate.latitude<self.clusterRect.origin.y + self.clusterRect.size.height / 2)?@"bottom":@"top";
+        
+        NSString * subClusterKey = [NSString stringWithFormat:@"%@-%@", subClusterColl, subClusterRow];
+        
+        uTikoMKClusterAnnotation * subclaster;
+        if ([self.childClusters objectForKey:subClusterKey]) {
+            subclaster = [self.childClusters objectForKey:subClusterKey];
+        } else {
+            float width = self.clusterRect.size.width / 2;
+            float height = self.clusterRect.size.height / 2;
+            float x = [subClusterColl isEqual:@"left"]?self.clusterRect.origin.x:self.clusterRect.origin.x + width;
+            float y = [subClusterRow isEqual:@"bottom"]?self.clusterRect.origin.y:self.clusterRect.origin.y + height;
+            MKMapRect subClusterRect = MKMapRectMake(x, y, width, height);
+            subclaster = [[uTikoMKClusterAnnotation alloc] initWithClusterRect:subClusterRect parentCluster:self];
+            [self.childClusters setObject:subclaster forKey:subClusterKey];
+        }
+        [subclaster addAnnotationObject:annotationObject];
+    }
+    totalLongitude += annotationObject.coordinate.longitude;
+    totalLatitude += annotationObject.coordinate.latitude;
+    self.annotationCount ++;
 }
 
 -(void)setPosition:(CLLocationCoordinate2D)position animated:(BOOL)animated completion:(void (^)())completion
@@ -43,7 +86,19 @@
     }
 }
 
--(void)animatePosition:(NSTimer *)timer
+- (void)restoreCoordinate
+{
+    self.coordinate = CLLocationCoordinate2DMake(totalLatitude / self.annotationCount, totalLongitude / self.annotationCount);
+}
+
+
+-(BOOL)isLowest
+{
+    return self.clusterRect.size.width < 0.00034;
+}
+
+
+/*-(void)animatePosition:(NSTimer *)timer
 {
     CLLocationCoordinate2D currentPosition = self.coordinate;
     currentPosition.latitude += (animationFinishCoordinate.latitude - animationStartCoordinate.latitude) / uTikoGMClusterMarkerAnimationStepCount;
@@ -58,9 +113,9 @@
         }
         [timer invalidate];
     }
-}
+}*/
 
-- (void)calculateValues {
+/*- (void)calculateValues {
     
     CLLocationDegrees minLat = INT_MAX;
     CLLocationDegrees minLng = INT_MAX;
@@ -91,6 +146,6 @@
                                               longitude:minLng]
                    distanceFromLocation:[[CLLocation alloc] initWithLatitude:maxLat
                                                                    longitude:maxLng]] / 2.f;
-}
+}*/
 
 @end

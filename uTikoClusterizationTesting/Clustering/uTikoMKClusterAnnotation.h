@@ -10,18 +10,32 @@
 #import <MapKit/MapKit.h>
 
 @class uTikoMKClusterController;
+@class uTikoMKAnnotationObject;
 
 @interface uTikoMKClusterAnnotation : NSObject <MKAnnotation>
 
--(id)initWithMarkerObjectsArray:(NSArray *)markerObjects parentController:(uTikoMKClusterController *)parentController;
+-(instancetype)initWithClusterRect:(MKMapRect)clusterRect parentCluster:(uTikoMKClusterAnnotation *)parentCluster;
 
 @property (assign, nonatomic) CLLocationCoordinate2D coordinate;
 @property (nonatomic, strong) NSMutableSet * annotationObjects;
-@property (nonatomic, strong) uTikoMKClusterController * parentController;
+@property (nonatomic, strong) NSMutableDictionary * childClusters;
+@property (nonatomic, strong) uTikoMKClusterAnnotation * parentCluster;
+@property (nonatomic) NSInteger annotationCount;
+@property (nonatomic) MKMapRect clusterRect;
+@property (nonatomic, readonly) BOOL isLowest;
+
+
+
 @property float radius;
 @property (nonatomic) int selectedObject;
 
 
--(void)setPosition:(CLLocationCoordinate2D)position animated:(BOOL)animated completion:(void(^)())completion;
+- (void)addAnnotationObject:(uTikoMKAnnotationObject *)annotationObject;
+
+- (void)restoreCoordinate;
+
+- (void)setPosition:(CLLocationCoordinate2D)position animated:(BOOL)animated completion:(void(^)())completion;
+
+
 
 @end

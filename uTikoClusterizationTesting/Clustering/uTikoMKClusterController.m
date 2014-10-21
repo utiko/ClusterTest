@@ -14,6 +14,7 @@
 @property (nonatomic) NSMutableArray * annotationObjects;
 @property (nonatomic) NSMutableArray * currentClusters;
 @property (nonatomic) BOOL clustersVisible;
+@property (nonatomic) uTikoMKClusterAnnotation * rootCluster;
 
 @end
 
@@ -39,16 +40,9 @@
 
 -(void)addMarkerObjects:(NSArray *)objects
 {
-    for (uTikoMKAnnotationObject * newObject in objects) {
-        BOOL exists = NO;
-        /*for (uTikoMKAnnotationObject * object in self.annotationObjects) {
-            if (object.tag == newObject.tag && newObject.tag!=0) {
-                exists = YES;
-                break;
-            }
-        }*/
-        if (!exists) [self.annotationObjects addObject:newObject];
-    }
+    self.rootCluster = [[uTikoMKClusterAnnotation alloc] init];
+    for (uTikoMKAnnotationObject * annotationObject in objects)
+        [self.rootCluster addAnnotationObject:annotationObject];
     [self refreshMarkers];
 }
 
@@ -72,7 +66,14 @@
         
         /// Generating new clusters
         
-        NSArray * newClusters = [self generateVisibleCustersForGridWithDimention:gridDimension leftBottomCorner:leftBottomCorner clusterAreaSize:clusterAreaSize];
+        MKMapRect mapRect = MKMapRectMake(self.mapView.region.center.longitude - self.mapView.region.span.longitudeDelta / 2,
+                                          self.mapView.region.center.latitude - self.mapView.region.span.latitudeDelta / 2, self.mapView.region.span.longitudeDelta, self.mapView.region.span.latitudeDelta);
+        NSArray * newClusters = [self clustersForMapRect:mapRect inCluster:self.rootCluster];
+        for (uTikoMKClusterAnnotation * cluster in newClusters) {
+            [cluster restoreCoordinate];
+        }
+        
+        //NSArray * newClusters = [self generateVisibleCustersForGridWithDimention:gridDimension leftBottomCorner:leftBottomCorner clusterAreaSize:clusterAreaSize];
         /*for (int i=0; i < gridDimension; i++)
             for (int j=0; j < gridDimension; j++) {
                 MKMapRect mapRect = MKMapRectMake(leftBottomCorner.longitude + j*clusterAreaSize, leftBottomCorner.latitude + i*clusterAreaSize, clusterAreaSize, clusterAreaSize);
@@ -157,7 +158,7 @@
         }
         
         /// Remove all clusters out of visible rect
-        for (uTikoMKClusterAnnotation * cluster in self.currentClusters) {
+        /*for (uTikoMKClusterAnnotation * cluster in self.currentClusters) {
             MKMapRect mapRect = MKMapRectMake(leftBottomCorner.longitude, leftBottomCorner.latitude,
                                               gridDimension*clusterAreaSize, gridDimension*clusterAreaSize);
             if (![self isCoordinate:cluster.coordinate inMapRect:mapRect]) {
@@ -170,13 +171,28 @@
                     [oldClusterForRemove addObject:cluster];
                 }
             }
-        }
+        }*/
         
         [self.currentClusters removeObjectsInArray:oldClusterForRemove];
         [oldClusterForRemove removeAllObjects];
         oldClusterForRemove = nil;
         NSLog(@"chk4");
     }
+}
+
+
+-(NSArray *)clustersForMapRect:(MKMapRect)mapRect inCluster:(uTikoMKClusterAnnotation *)cluster
+{
+    BOOL isMinimumClusterForScreen = cluster.clusterRect.size.width < mapRect.size.width / 2;
+    if (isMinimumClusterForScreen || cluster.isLowest) return @[cluster];
+    
+    NSMutableArray * clusters = [NSMutableArray array];
+    for (NSString * key in cluster.childClusters) {
+        uTikoMKClusterAnnotation * childCluster = [cluster.childClusters objectForKey:key];
+        BOOL isVisible = MKMapRectIntersectsRect(mapRect, childCluster.clusterRect);
+        if (isVisible) [clusters addObjectsFromArray:[self clustersForMapRect:mapRect inCluster:childCluster]];
+    }
+    return clusters;
 }
 
 /*-(NSMutableArray *)getMarkerObjectsInMapRect:(MKMapRect)mapRect
@@ -189,7 +205,7 @@
     return result;
 }*/
 
-- (NSArray *)generateVisibleCustersForGridWithDimention:(NSInteger)gridDimension
+/*- (NSArray *)generateVisibleCustersForGridWithDimention:(NSInteger)gridDimension
                                        leftBottomCorner:(CLLocationCoordinate2D)leftBottomCorner
                                         clusterAreaSize:(float)clusterAreaSize
 {
@@ -227,7 +243,7 @@
     NSLog(@"chk3");
     return result;
     
-}
+}*/
 
 
 -(BOOL)isCoordinate:(CLLocationCoordinate2D)coordinate inMapRect:(MKMapRect)mapRect
@@ -241,6 +257,22 @@
     
     return latitudeInMapRect && (longitudeInMapRect || longitudeInExtraMapRect);
 }
+
+/*- (BOOL)isMapRect:(MKMapRect)mapRect1 haveCollisionWith:(MKMapRect)mapRect2
+{
+    MKMapPoint center1 = MKMapPointMake(mapRect1.origin.x + mapRect1.size.width / 2, mapRect1.origin.y + mapRect1.size.width);
+    MKMapPoint center2 = MKMapPointMake(mapRect2.origin.x + mapRect2.size.width / 2, mapRect2.origin.y + mapRect2.size.width);
+    double deltaX = fabs(center1.x - center2.x);
+    while (deltaX > 360) { /// 180 / -180 latitude collision
+        deltaX -= 360;
+    }
+    BOOL xCollision = deltaX < (mapRect1.size.width + mapRect2.size.width) / 2;
+    
+    double deltaY = fabs(center1.y - center2.y);
+    BOOL yCollision = deltaY < (mapRect1.size.height + mapRect2.size.height) / 2;
+    
+    return xCollision && yCollision;
+}*/
 
 -(void)removeAllObjects
 {
@@ -269,5 +301,7 @@
     self.clustersVisible = YES;
     [self refreshMarkers];
 }
+
+
 
 @end

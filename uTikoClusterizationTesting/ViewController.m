@@ -77,7 +77,7 @@
                 clusterAnnotationView = [[ClusterAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:photographerClusterAnnotationIdentifier];
             }
             clusterAnnotationView.image = [UIImage imageNamed:@"icon_cluster.png"];
-            [clusterAnnotationView setClusterAnnotationText:[NSString stringWithFormat:@"%lu", (unsigned long)cluster.annotationObjects.count]];
+            [clusterAnnotationView setClusterAnnotationText:[NSString stringWithFormat:@"%lu", (unsigned long)cluster.annotationCount]];
             clusterAnnotationView.centerOffset = CGPointMake(0, -clusterAnnotationView.image.size.height / 2);
             return clusterAnnotationView;
         }
