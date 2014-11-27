@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>90FDEB03-3872-4D59-B258-8BC64744211A</string>
+	<key>IDESourceControlProjectName</key>
+	<string>NoCluster</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>BA06C84823353926542C4DA41295CE0E2124579E</key>
+		<string>bitbucket.org:utiko/map-cluster-ios.git</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>NoCluster.xcodeproj</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>BA06C84823353926542C4DA41295CE0E2124579E</key>
+		<string>../..</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>bitbucket.org:utiko/map-cluster-ios.git</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>111</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>BA06C84823353926542C4DA41295CE0E2124579E</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>BA06C84823353926542C4DA41295CE0E2124579E</string>
+			<key>IDESourceControlWCCName</key>
+			<string>map-cluster-ios</string>
+		</dict>
+	</array>
+</dict>
+</plist>
