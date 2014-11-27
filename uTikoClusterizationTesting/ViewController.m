@@ -9,8 +9,19 @@
 #import "ViewController.h"
 #import <MapKit/MapKit.h>
 #import "uTikoMKClusterController.h"
-#import "AirportAnnotationObject.h"
+#import "McDonaldsAnnotationObject.h"
 #import "ClusterAnnotationView.h"
+
+@interface TestAnnotation : NSObject <MKAnnotation>
+
+@property (nonatomic) CLLocationCoordinate2D coordinate;
+
+@end
+
+@implementation TestAnnotation
+
+
+@end
 
 @interface ViewController () <MKMapViewDelegate, uTikoMKClusterControllerDelegate>
 
@@ -36,17 +47,22 @@
 
 - (void)loadObjects
 {
-    NSString* path = [[NSBundle mainBundle] pathForResource:@"Airports" ofType:@"plist"];
+    NSString* path = [[NSBundle mainBundle] pathForResource:@"McdonFiltered" ofType:@"plist"];
     NSArray * data = [NSArray arrayWithContentsOfFile:path];
     NSMutableArray * annotationObjectsArray = [NSMutableArray array];
     NSInteger i = 0;
     for (NSDictionary * dataDict in data) {
         if ([dataDict isKindOfClass:[NSDictionary class]]) {
-            AirportAnnotationObject * annotationObject = [[AirportAnnotationObject alloc] initWithDictionary:dataDict];
+            McDonaldsAnnotationObject * annotationObject = [[McDonaldsAnnotationObject alloc] initWithDictionary:dataDict];
             [annotationObjectsArray addObject:annotationObject];
             
-            //i++;
-            //if (i>10000) break;
+            //TestAnnotation * annotation = [[TestAnnotation alloc] init];
+            //annotation.coordinate = annotationObject.coordinate;
+            //[self.mapView addAnnotation:annotation];
+            
+            i++;
+            
+            //if (i>2000) break;
         }
     }
     [self.clusterController addMarkerObjects:annotationObjectsArray];
@@ -57,30 +73,39 @@
     [self.clusterController refreshMarkers];
 }
 
+
 -(MKAnnotationView *)mapView:(MKMapView *)mapView viewForAnnotation:(id<MKAnnotation>)annotation
 {
-    NSString *photographerAnnotationIdentifier = @"photographerAnnotation";
-    NSString *photographerClusterAnnotationIdentifier = @"photographerClusterAnnotation";
+    NSString * annotationIdentifier = @"annotation";
+    NSString * clusterAnnotationIdentifier = @"clusterAnnotation";
     if ([annotation isKindOfClass:[uTikoMKClusterAnnotation class]]) {
         uTikoMKClusterAnnotation * cluster = (uTikoMKClusterAnnotation *)annotation;
         if (cluster.annotationObjects.count == 1) {
-            MKAnnotationView *annotationView = [mapView dequeueReusableAnnotationViewWithIdentifier:photographerAnnotationIdentifier];
+            MKAnnotationView *annotationView = [mapView dequeueReusableAnnotationViewWithIdentifier:annotationIdentifier];
             if (!annotationView) {
-                annotationView = [[MKAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:photographerAnnotationIdentifier];
+                annotationView = [[MKAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:annotationIdentifier];
             }
             annotationView.image = [UIImage imageNamed:@"icon_pin.png"];
-            annotationView.centerOffset = CGPointMake(0, -annotationView.image.size.height / 2);
+            annotationView.centerOffset = CGPointMake(0, 0);
             return annotationView;
         } else {
-            ClusterAnnotationView * clusterAnnotationView = (ClusterAnnotationView *)[mapView dequeueReusableAnnotationViewWithIdentifier:photographerClusterAnnotationIdentifier];
+            ClusterAnnotationView * clusterAnnotationView = (ClusterAnnotationView *)[mapView dequeueReusableAnnotationViewWithIdentifier:clusterAnnotationIdentifier];
             if (!clusterAnnotationView) {
-                clusterAnnotationView = [[ClusterAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:photographerClusterAnnotationIdentifier];
+                clusterAnnotationView = [[ClusterAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:clusterAnnotationIdentifier];
             }
             clusterAnnotationView.image = [UIImage imageNamed:@"icon_cluster.png"];
-            [clusterAnnotationView setClusterAnnotationText:[NSString stringWithFormat:@"%lu", (unsigned long)cluster.annotationCount]];
-            clusterAnnotationView.centerOffset = CGPointMake(0, -clusterAnnotationView.image.size.height / 2);
+            [clusterAnnotationView setClusterAnnotationText:[NSString stringWithFormat:@"%lu", (unsigned long)cluster.annotationObjects.count]];
+            clusterAnnotationView.centerOffset = CGPointMake(0, 0);
             return clusterAnnotationView;
         }
+    } else {
+        MKAnnotationView *annotationView = [mapView dequeueReusableAnnotationViewWithIdentifier:annotationIdentifier];
+        if (!annotationView) {
+            annotationView = [[MKAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:annotationIdentifier];
+        }
+        annotationView.image = [UIImage imageNamed:@"icon_pin.png"];
+        annotationView.centerOffset = CGPointMake(0, -annotationView.image.size.height / 2);
+        return annotationView;
     }
     return nil;
 }
@@ -88,11 +113,8 @@
 
 - (void)mapView:(MKMapView *)mapView didSelectAnnotationView:(MKAnnotationView *)view
 {
-    //KSPPhotographerAnnotationObject * photographer;
     if ([view.annotation isKindOfClass:[uTikoMKClusterAnnotation class]]) {
-        
         uTikoMKClusterAnnotation * clusterAnnotation = view.annotation;
-        
         if (clusterAnnotation.annotationObjects.count > 1) {
             float minLatitude = 0;
             float minLongitude = 0;
@@ -129,8 +151,7 @@
                 //facility = [[clusterAnnotation.annotationObjects allObjects] objectAtIndex:clusterAnnotation.selectedObject];
             }
         } else if (clusterAnnotation.annotationObjects.count == 1) {
-            //photographer = [clusterAnnotation.annotationObjects anyObject];
-            // popupView panel = MSMDirectionOutside
+
         }
         
     }

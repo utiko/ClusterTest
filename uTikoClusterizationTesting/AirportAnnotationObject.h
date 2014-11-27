@@ -15,6 +15,4 @@
 
 -(instancetype)initWithDictionary:(NSDictionary *)dictionary;
 
-@property (nonatomic, strong) NSString * code;
-
 @end

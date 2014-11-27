@@ -18,7 +18,7 @@
     float latitude = [[dictionary objectForKey:@"Latitude"] floatValue];
     float longitude = [[dictionary objectForKey:@"Longitude"] floatValue];
     self.coordinate = CLLocationCoordinate2DMake(latitude, longitude);
-    self.code = [dictionary objectForKey:@"Code"];
+    self.tag = [dictionary objectForKey:@"Code"];
     
     return self;
 }

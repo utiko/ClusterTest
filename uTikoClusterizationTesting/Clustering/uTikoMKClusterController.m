@@ -51,7 +51,7 @@
     if (self.mapView && self.clustersVisible) {
         
         //float koef = pow(2, floor(self.mapView.camera.zoom)); // Zoom koeficient
-        float gridDimension = 7;
+        /*float gridDimension = 7;
         float clusterScreenSize = 500;
         while (clusterScreenSize / 2 > self.mapView.region.span.longitudeDelta) {
             clusterScreenSize = clusterScreenSize / 2;
@@ -61,13 +61,13 @@
         /// Calculating grid
         CLLocationCoordinate2D leftBottomCorner = [self.mapView convertPoint:CGPointMake(0, self.mapView.frame.size.height) toCoordinateFromView:self.mapView];
         leftBottomCorner.latitude = (floor( leftBottomCorner.latitude / clusterAreaSize ) - 1) * clusterAreaSize;
-        leftBottomCorner.longitude = (floor( leftBottomCorner.longitude / clusterAreaSize ) - 1) * clusterAreaSize;
+        leftBottomCorner.longitude = (floor( leftBottomCorner.longitude / clusterAreaSize ) - 1) * clusterAreaSize;*/
         //NSLog(@"%f %f %f", leftBottomCorner.latitude, leftBottomCorner.longitude, clusterAreaSize);
         
         /// Generating new clusters
         
-        MKMapRect mapRect = MKMapRectMake(self.mapView.region.center.longitude - self.mapView.region.span.longitudeDelta / 2,
-                                          self.mapView.region.center.latitude - self.mapView.region.span.latitudeDelta / 2, self.mapView.region.span.longitudeDelta, self.mapView.region.span.latitudeDelta);
+        MKMapRect mapRect = MKMapRectMake(self.mapView.region.center.longitude - self.mapView.region.span.longitudeDelta,
+                                          self.mapView.region.center.latitude - self.mapView.region.span.latitudeDelta, self.mapView.region.span.longitudeDelta * 2, self.mapView.region.span.latitudeDelta * 2);
         NSArray * newClusters = [self clustersForMapRect:mapRect inCluster:self.rootCluster];
         for (uTikoMKClusterAnnotation * cluster in newClusters) {
             [cluster restoreCoordinate];
@@ -158,9 +158,9 @@
         }
         
         /// Remove all clusters out of visible rect
-        /*for (uTikoMKClusterAnnotation * cluster in self.currentClusters) {
-            MKMapRect mapRect = MKMapRectMake(leftBottomCorner.longitude, leftBottomCorner.latitude,
-                                              gridDimension*clusterAreaSize, gridDimension*clusterAreaSize);
+        for (uTikoMKClusterAnnotation * cluster in self.currentClusters) {
+            //MKMapRect mapRect = MKMapRectMake(leftBottomCorner.longitude, leftBottomCorner.latitude,
+              //                                gridDimension*clusterAreaSize, gridDimension*clusterAreaSize);
             if (![self isCoordinate:cluster.coordinate inMapRect:mapRect]) {
                 BOOL canDelete = YES;
                 if([self.delegate respondsToSelector:@selector(clusterController:removingCluster:canRemoveSelected:)]){
@@ -171,19 +171,19 @@
                     [oldClusterForRemove addObject:cluster];
                 }
             }
-        }*/
+        }
         
         [self.currentClusters removeObjectsInArray:oldClusterForRemove];
         [oldClusterForRemove removeAllObjects];
         oldClusterForRemove = nil;
-        NSLog(@"chk4");
+        //NSLog(@"chk4");
     }
 }
 
 
 -(NSArray *)clustersForMapRect:(MKMapRect)mapRect inCluster:(uTikoMKClusterAnnotation *)cluster
 {
-    BOOL isMinimumClusterForScreen = cluster.clusterRect.size.width < mapRect.size.width / 2;
+    BOOL isMinimumClusterForScreen = cluster.clusterRect.size.width < mapRect.size.width / 4;
     if (isMinimumClusterForScreen || cluster.isLowest) return @[cluster];
     
     NSMutableArray * clusters = [NSMutableArray array];
@@ -257,22 +257,6 @@
     
     return latitudeInMapRect && (longitudeInMapRect || longitudeInExtraMapRect);
 }
-
-/*- (BOOL)isMapRect:(MKMapRect)mapRect1 haveCollisionWith:(MKMapRect)mapRect2
-{
-    MKMapPoint center1 = MKMapPointMake(mapRect1.origin.x + mapRect1.size.width / 2, mapRect1.origin.y + mapRect1.size.width);
-    MKMapPoint center2 = MKMapPointMake(mapRect2.origin.x + mapRect2.size.width / 2, mapRect2.origin.y + mapRect2.size.width);
-    double deltaX = fabs(center1.x - center2.x);
-    while (deltaX > 360) { /// 180 / -180 latitude collision
-        deltaX -= 360;
-    }
-    BOOL xCollision = deltaX < (mapRect1.size.width + mapRect2.size.width) / 2;
-    
-    double deltaY = fabs(center1.y - center2.y);
-    BOOL yCollision = deltaY < (mapRect1.size.height + mapRect2.size.height) / 2;
-    
-    return xCollision && yCollision;
-}*/
 
 -(void)removeAllObjects
 {

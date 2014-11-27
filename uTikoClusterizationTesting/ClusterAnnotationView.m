@@ -9,10 +9,10 @@
     self = [super initWithAnnotation:annotation reuseIdentifier:reuseIdentifier];
     
     if (self) {
-        clusterLabel = [[UILabel alloc] initWithFrame:CGRectMake(0.f, 0.f, 23.f, 24.f)];
-        clusterLabel.textColor = [UIColor whiteColor];
+        clusterLabel = [[UILabel alloc] initWithFrame:CGRectMake(0.f, 0.f, 32.f, 28.f)];
+        clusterLabel.textColor = [UIColor blackColor];
         clusterLabel.backgroundColor = [UIColor clearColor];
-        clusterLabel.font = [UIFont fontWithName:@"HelveticaNeue-Medium" size:9.f];
+        clusterLabel.font = [UIFont fontWithName:@"HelveticaNeue-Medium" size:8.f];
         clusterLabel.textAlignment = NSTextAlignmentCenter;
         [self addSubview:clusterLabel];
     }

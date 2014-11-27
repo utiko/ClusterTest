@@ -91,61 +91,9 @@
     self.coordinate = CLLocationCoordinate2DMake(totalLatitude / self.annotationCount, totalLongitude / self.annotationCount);
 }
 
-
 -(BOOL)isLowest
 {
     return self.clusterRect.size.width < 0.00034;
 }
-
-
-/*-(void)animatePosition:(NSTimer *)timer
-{
-    CLLocationCoordinate2D currentPosition = self.coordinate;
-    currentPosition.latitude += (animationFinishCoordinate.latitude - animationStartCoordinate.latitude) / uTikoGMClusterMarkerAnimationStepCount;
-    currentPosition.longitude += (animationFinishCoordinate.longitude - animationStartCoordinate.longitude) / uTikoGMClusterMarkerAnimationStepCount;
-    
-    [self setCoordinate:currentPosition];
-    animationsProgress++;
-    if (animationsProgress >= uTikoGMClusterMarkerAnimationStepCount) {
-        if (timer.userInfo) {
-            void (^compl)() = timer.userInfo;
-            compl();
-        }
-        [timer invalidate];
-    }
-}*/
-
-/*- (void)calculateValues {
-    
-    CLLocationDegrees minLat = INT_MAX;
-    CLLocationDegrees minLng = INT_MAX;
-    CLLocationDegrees maxLat = -INT_MAX;
-    CLLocationDegrees maxLng = -INT_MAX;
-    
-    CLLocationDegrees totalLat = 0;
-    CLLocationDegrees totalLng = 0;
-    
-    for(uTikoMKAnnotationObject * markerObject in self.annotationObjects){
-        
-        CLLocationDegrees lat = markerObject.coordinate.latitude;
-        CLLocationDegrees lng = markerObject.coordinate.longitude;
-        
-        minLat = MIN(minLat, lat);
-        minLng = MIN(minLng, lng);
-        maxLat = MAX(maxLat, lat);
-        maxLng = MAX(maxLng, lng);
-        
-        totalLat += lat;
-        totalLng += lng;
-    }
-    
-    self.coordinate = CLLocationCoordinate2DMake(totalLat / self.annotationObjects.count,
-                                               totalLng / self.annotationObjects.count);
-    
-    self.radius = [[[CLLocation alloc] initWithLatitude:minLat
-                                              longitude:minLng]
-                   distanceFromLocation:[[CLLocation alloc] initWithLatitude:maxLat
-                                                                   longitude:maxLng]] / 2.f;
-}*/
 
 @end
