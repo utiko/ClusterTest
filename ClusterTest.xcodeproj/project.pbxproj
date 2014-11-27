@@ -27,16 +27,6 @@
 		3DBD88431A26774B007E1D7A /* McDonaldsAnnotationObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 3DBD88421A26774B007E1D7A /* McDonaldsAnnotationObject.m */; };
 /* End PBXBuildFile section */
 
-/* Begin PBXContainerItemProxy section */
-		3D1C9DF019F4FA6E00EEE501 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 3D1C9DCB19F4FA6E00EEE501 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 3D1C9DD219F4FA6E00EEE501;
-			remoteInfo = uTikoClusterizationTesting;
-		};
-/* End PBXContainerItemProxy section */
-
 /* Begin PBXFileReference section */
 		3D1C9DD319F4FA6E00EEE501 /* ClusterTest.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ClusterTest.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3D1C9DD719F4FA6E00EEE501 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -48,7 +38,6 @@
 		3D1C9DE419F4FA6E00EEE501 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		3D1C9DE619F4FA6E00EEE501 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		3D1C9DE919F4FA6E00EEE501 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
-		3D1C9DEF19F4FA6E00EEE501 /* ClusterTestTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ClusterTestTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		3D1C9E0819F4FD4200EEE501 /* uTikoMKAnnotationObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = uTikoMKAnnotationObject.h; sourceTree = "<group>"; };
 		3D1C9E0919F4FD4200EEE501 /* uTikoMKAnnotationObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = uTikoMKAnnotationObject.m; sourceTree = "<group>"; };
 		3D1C9E0A19F4FD4200EEE501 /* uTikoMKClusterAnnotation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = uTikoMKClusterAnnotation.h; sourceTree = "<group>"; };
@@ -78,13 +67,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		3D1C9DEC19F4FA6E00EEE501 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -101,7 +83,6 @@
 			isa = PBXGroup;
 			children = (
 				3D1C9DD319F4FA6E00EEE501 /* ClusterTest.app */,
-				3D1C9DEF19F4FA6E00EEE501 /* ClusterTestTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -175,24 +156,6 @@
 			productReference = 3D1C9DD319F4FA6E00EEE501 /* ClusterTest.app */;
 			productType = "com.apple.product-type.application";
 		};
-		3D1C9DEE19F4FA6E00EEE501 /* ClusterTestTests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 3D1C9DFC19F4FA6F00EEE501 /* Build configuration list for PBXNativeTarget "ClusterTestTests" */;
-			buildPhases = (
-				3D1C9DEB19F4FA6E00EEE501 /* Sources */,
-				3D1C9DEC19F4FA6E00EEE501 /* Frameworks */,
-				3D1C9DED19F4FA6E00EEE501 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				3D1C9DF119F4FA6E00EEE501 /* PBXTargetDependency */,
-			);
-			name = ClusterTestTests;
-			productName = uTikoClusterizationTestingTests;
-			productReference = 3D1C9DEF19F4FA6E00EEE501 /* ClusterTestTests.xctest */;
-			productType = "com.apple.product-type.bundle.unit-test";
-		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -204,10 +167,6 @@
 				TargetAttributes = {
 					3D1C9DD219F4FA6E00EEE501 = {
 						CreatedOnToolsVersion = 6.0.1;
-					};
-					3D1C9DEE19F4FA6E00EEE501 = {
-						CreatedOnToolsVersion = 6.0.1;
-						TestTargetID = 3D1C9DD219F4FA6E00EEE501;
 					};
 				};
 			};
@@ -225,7 +184,6 @@
 			projectRoot = "";
 			targets = (
 				3D1C9DD219F4FA6E00EEE501 /* ClusterTest */,
-				3D1C9DEE19F4FA6E00EEE501 /* ClusterTestTests */,
 			);
 		};
 /* End PBXProject section */
@@ -243,13 +201,6 @@
 				3DBD88401A26769E007E1D7A /* McdonFiltered.plist in Resources */,
 				3D1C9E2119F54D8B00EEE501 /* icon_cluster@2x.png in Resources */,
 				3DBD883E1A26726C007E1D7A /* Mcdon.plist in Resources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		3D1C9DED19F4FA6E00EEE501 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -272,22 +223,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		3D1C9DEB19F4FA6E00EEE501 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXSourcesBuildPhase section */
-
-/* Begin PBXTargetDependency section */
-		3D1C9DF119F4FA6E00EEE501 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 3D1C9DD219F4FA6E00EEE501 /* ClusterTest */;
-			targetProxy = 3D1C9DF019F4FA6E00EEE501 /* PBXContainerItemProxy */;
-		};
-/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		3D1C9DE319F4FA6E00EEE501 /* Main.storyboard */ = {
@@ -409,40 +345,6 @@
 			};
 			name = Release;
 		};
-		3D1C9DFD19F4FA6F00EEE501 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(SDKROOT)/Developer/Library/Frameworks",
-					"$(inherited)",
-				);
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"DEBUG=1",
-					"$(inherited)",
-				);
-				INFOPLIST_FILE = uTikoClusterizationTestingTests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_NAME = ClusterTestTests;
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/uTikoClusterizationTesting.app/uTikoClusterizationTesting";
-			};
-			name = Debug;
-		};
-		3D1C9DFE19F4FA6F00EEE501 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(SDKROOT)/Developer/Library/Frameworks",
-					"$(inherited)",
-				);
-				INFOPLIST_FILE = uTikoClusterizationTestingTests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_NAME = ClusterTestTests;
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/uTikoClusterizationTesting.app/uTikoClusterizationTesting";
-			};
-			name = Release;
-		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -460,15 +362,6 @@
 			buildConfigurations = (
 				3D1C9DFA19F4FA6F00EEE501 /* Debug */,
 				3D1C9DFB19F4FA6F00EEE501 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		3D1C9DFC19F4FA6F00EEE501 /* Build configuration list for PBXNativeTarget "ClusterTestTests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				3D1C9DFD19F4FA6F00EEE501 /* Debug */,
-				3D1C9DFE19F4FA6F00EEE501 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

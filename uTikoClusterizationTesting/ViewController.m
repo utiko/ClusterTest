@@ -50,7 +50,6 @@
     NSString* path = [[NSBundle mainBundle] pathForResource:@"McdonFiltered" ofType:@"plist"];
     NSArray * data = [NSArray arrayWithContentsOfFile:path];
     NSMutableArray * annotationObjectsArray = [NSMutableArray array];
-    NSInteger i = 0;
     for (NSDictionary * dataDict in data) {
         if ([dataDict isKindOfClass:[NSDictionary class]]) {
             McDonaldsAnnotationObject * annotationObject = [[McDonaldsAnnotationObject alloc] initWithDictionary:dataDict];
@@ -59,10 +58,6 @@
             //TestAnnotation * annotation = [[TestAnnotation alloc] init];
             //annotation.coordinate = annotationObject.coordinate;
             //[self.mapView addAnnotation:annotation];
-            
-            i++;
-            
-            //if (i>2000) break;
         }
     }
     [self.clusterController addMarkerObjects:annotationObjectsArray];

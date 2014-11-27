@@ -50,51 +50,12 @@
 {
     if (self.mapView && self.clustersVisible) {
         
-        //float koef = pow(2, floor(self.mapView.camera.zoom)); // Zoom koeficient
-        /*float gridDimension = 7;
-        float clusterScreenSize = 500;
-        while (clusterScreenSize / 2 > self.mapView.region.span.longitudeDelta) {
-            clusterScreenSize = clusterScreenSize / 2;
-        }
-        float clusterAreaSize = clusterScreenSize / (gridDimension - 3);
-        
-        /// Calculating grid
-        CLLocationCoordinate2D leftBottomCorner = [self.mapView convertPoint:CGPointMake(0, self.mapView.frame.size.height) toCoordinateFromView:self.mapView];
-        leftBottomCorner.latitude = (floor( leftBottomCorner.latitude / clusterAreaSize ) - 1) * clusterAreaSize;
-        leftBottomCorner.longitude = (floor( leftBottomCorner.longitude / clusterAreaSize ) - 1) * clusterAreaSize;*/
-        //NSLog(@"%f %f %f", leftBottomCorner.latitude, leftBottomCorner.longitude, clusterAreaSize);
-        
-        /// Generating new clusters
-        
         MKMapRect mapRect = MKMapRectMake(self.mapView.region.center.longitude - self.mapView.region.span.longitudeDelta,
                                           self.mapView.region.center.latitude - self.mapView.region.span.latitudeDelta, self.mapView.region.span.longitudeDelta * 2, self.mapView.region.span.latitudeDelta * 2);
         NSArray * newClusters = [self clustersForMapRect:mapRect inCluster:self.rootCluster];
         for (uTikoMKClusterAnnotation * cluster in newClusters) {
             [cluster restoreCoordinate];
         }
-        
-        //NSArray * newClusters = [self generateVisibleCustersForGridWithDimention:gridDimension leftBottomCorner:leftBottomCorner clusterAreaSize:clusterAreaSize];
-        /*for (int i=0; i < gridDimension; i++)
-            for (int j=0; j < gridDimension; j++) {
-                MKMapRect mapRect = MKMapRectMake(leftBottomCorner.longitude + j*clusterAreaSize, leftBottomCorner.latitude + i*clusterAreaSize, clusterAreaSize, clusterAreaSize);
-                NSMutableArray * markersInRegion = [self getMarkerObjectsInMapRect:mapRect];
-                if (markersInRegion.count>0) {
-                    
-                    /// Create cluster object
-                    uTikoMKClusterAnnotation * cluster = [[uTikoMKClusterAnnotation alloc] initWithMarkerObjectsArray:markersInRegion parentController:self];
-                    
-                    /// Customize cluster
-                    if([self.delegate respondsToSelector:@selector(clusterController:configureClusterAnnotationForDisplay:)]){
-                        [self.delegate clusterController:self configureClusterAnnotationForDisplay:cluster];
-                    }
-                    //cluster.title = [[NSString alloc] initWithFormat:@"%d", markersInRegion.count ];
-                    
-                    [newClusters addObject:cluster];
-                }
-            }*/
-        
-        //NSLog(@"%f %f %d", leftBottomCorner.latitude, leftBottomCorner.longitude, [self getMarkerObjectsInMapRect:MKMapRectMake(leftBottomCorner.longitude, leftBottomCorner.latitude, gridDimension*clusterAreaSize, gridDimension*clusterAreaSize)].count);
-        
         
         /// Updating clusters
         NSMutableArray * oldClusterForRemove = [NSMutableArray array];
@@ -159,8 +120,6 @@
         
         /// Remove all clusters out of visible rect
         for (uTikoMKClusterAnnotation * cluster in self.currentClusters) {
-            //MKMapRect mapRect = MKMapRectMake(leftBottomCorner.longitude, leftBottomCorner.latitude,
-              //                                gridDimension*clusterAreaSize, gridDimension*clusterAreaSize);
             if (![self isCoordinate:cluster.coordinate inMapRect:mapRect]) {
                 BOOL canDelete = YES;
                 if([self.delegate respondsToSelector:@selector(clusterController:removingCluster:canRemoveSelected:)]){
@@ -176,7 +135,6 @@
         [self.currentClusters removeObjectsInArray:oldClusterForRemove];
         [oldClusterForRemove removeAllObjects];
         oldClusterForRemove = nil;
-        //NSLog(@"chk4");
     }
 }
 
@@ -194,57 +152,6 @@
     }
     return clusters;
 }
-
-/*-(NSMutableArray *)getMarkerObjectsInMapRect:(MKMapRect)mapRect
-{
-    NSMutableArray * result = [NSMutableArray array];
-    for (uTikoMKAnnotationObject * markerObject in self.annotationObjects) {
-        if (!(markerObject.coordinate.latitude==0 && markerObject.coordinate.longitude==0) && [self isCoordinate:markerObject.coordinate inMapRect:mapRect])
-            [result addObject:markerObject];
-    }
-    return result;
-}*/
-
-/*- (NSArray *)generateVisibleCustersForGridWithDimention:(NSInteger)gridDimension
-                                       leftBottomCorner:(CLLocationCoordinate2D)leftBottomCorner
-                                        clusterAreaSize:(float)clusterAreaSize
-{
-    NSLog(@"chk1");
-    NSMutableDictionary * grid = [NSMutableDictionary dictionary];
-    float visibleAreaSize = clusterAreaSize * gridDimension;
-    for (uTikoMKAnnotationObject * annotationObject in self.annotationObjects) {
-        MKMapRect visibleMapRect = MKMapRectMake(leftBottomCorner.longitude, leftBottomCorner.latitude, visibleAreaSize, visibleAreaSize);
-        CLLocationCoordinate2D annotationCoordinate = annotationObject.coordinate;
-        if ([self isCoordinate:annotationObject.coordinate inMapRect:visibleMapRect]) {
-            if (annotationCoordinate.longitude < leftBottomCorner.longitude) annotationCoordinate.longitude += 360;
-            if (annotationCoordinate.longitude > leftBottomCorner.longitude + visibleAreaSize) annotationCoordinate.longitude -= 360;
-            int clusterGridCol = (int)trunc((annotationCoordinate.longitude - leftBottomCorner.longitude) / clusterAreaSize);
-            int clusterGridRow = (int)trunc((annotationCoordinate.latitude - leftBottomCorner.latitude) / clusterAreaSize);
-            NSString * key = [NSString stringWithFormat:@"%d-%d", clusterGridCol, clusterGridRow];
-            if (![grid objectForKey:key]) [grid setObject:[NSMutableArray array] forKey:key];
-            NSMutableArray * clusterAnnotations = [grid objectForKey:key];
-            [clusterAnnotations addObject:annotationObject];
-        }
-    }
-    NSLog(@"chk2");
-    NSMutableArray * result = [NSMutableArray array];
-    for (int row = 0; row < gridDimension; row++) {
-        for (int col = 0; col < gridDimension; col++) {
-            NSString * key = [NSString stringWithFormat:@"%d-%d", col, row];
-            if ([[grid objectForKey:key] isKindOfClass:[NSArray class]]) {
-                NSArray * annotations = [grid objectForKey:key];
-                if (annotations.count > 0) {
-                    uTikoMKClusterAnnotation * cluster = [[uTikoMKClusterAnnotation alloc] initWithMarkerObjectsArray:annotations parentController:self];
-                    [result addObject:cluster];
-                }
-            }
-        }
-    }
-    NSLog(@"chk3");
-    return result;
-    
-}*/
-
 
 -(BOOL)isCoordinate:(CLLocationCoordinate2D)coordinate inMapRect:(MKMapRect)mapRect
 {
